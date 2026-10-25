@@ -3,20 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>가이라스 성교단 대전령 — 거룩한 창세경과 에르실바 정죄록</title>
+  <title>가이라스 성좌록 — 거룩한 창세경과 에르실바 정죄록 (시즌 1)</title>
   
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   
-  <!-- Google Fonts: UnifrakturMaguntia (Gothic Title), Cinzel (Liturgical Latin), Noto Serif KR (Holy Scripture) -->
+  <!-- Google Fonts: Cinzel (Imperial Latin), Noto Serif KR (Sacred Scripture), MedievalSharp -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Noto+Serif+KR:wght@300;400;600;700;900&family=UnifrakturMaguntia&family=MedievalSharp&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Noto+Serif+KR:wght@300;400;600;700;900&family=MedievalSharp&display=swap" rel="stylesheet">
   
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
-  <!-- Tone.js for Sacred Cathedral Organ & Bell -->
+  <!-- Tone.js for Sacred Cathedral Organ & Bell Engine -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.min.js"></script>
 
   <script>
@@ -27,6 +27,7 @@
           colors: {
             sanct: {
               black: '#070605',
+              gateDark: '#0a0907',
               marble: '#0f0e0c',
               altar: '#181512',
               altarLight: '#231f1a',
@@ -45,8 +46,7 @@
           fontFamily: {
             scripture: ['"Noto Serif KR"', 'serif'],
             latin: ['Cinzel', 'serif'],
-            gothic: ['MedievalSharp', '"Noto Serif KR"', 'serif'],
-            liturgy: ['UnifrakturMaguntia', 'cursive']
+            gothic: ['MedievalSharp', '"Noto Serif KR"', 'serif']
           }
         }
       }
@@ -70,12 +70,9 @@
       background: #c59b27;
     }
 
-    /* Gold Leaf & Halo Lighting */
+    /* Gold Halo & Liturgical Shadows */
     .halo-gold {
-      text-shadow: 0 0 12px rgba(236, 214, 138, 0.6), 0 0 25px rgba(197, 155, 39, 0.35);
-    }
-    .halo-red {
-      text-shadow: 0 0 10px rgba(220, 38, 38, 0.7), 0 0 20px rgba(164, 19, 60, 0.4);
+      text-shadow: 0 0 14px rgba(236, 214, 138, 0.65), 0 0 28px rgba(197, 155, 39, 0.4);
     }
     .border-sacred {
       border: 1px solid #4a3e2e;
@@ -89,7 +86,7 @@
     .drop-cap::first-letter {
       float: left;
       font-family: 'Cinzel', serif;
-      font-size: 3.2rem;
+      font-size: 3.1rem;
       line-height: 0.85;
       padding-top: 4px;
       padding-right: 10px;
@@ -99,17 +96,131 @@
       font-weight: 900;
     }
 
-    /* Fog of Heresy Pulse */
-    @keyframes holyPulse {
-      0%, 100% { opacity: 0.88; }
-      50% { opacity: 1; }
+    /* Arcane Concentric Circles Rotation */
+    @keyframes spinSlow {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
     }
-    .altar-glow {
-      animation: holyPulse 4s infinite ease-in-out;
+    @keyframes spinReverse {
+      from { transform: rotate(360deg); }
+      to { transform: rotate(0deg); }
+    }
+    .animate-spin-slow {
+      animation: spinSlow 55s linear infinite;
+    }
+    .animate-spin-reverse {
+      animation: spinReverse 40s linear infinite;
+    }
+
+    /* Sound Equalizer Animated Bars */
+    .eq-bar {
+      transition: height 0.15s ease;
+    }
+    .eq-playing .eq-bar:nth-child(1) { animation: eqBounce 1s infinite ease-in-out 0.1s; }
+    .eq-playing .eq-bar:nth-child(2) { animation: eqBounce 0.8s infinite ease-in-out 0.3s; }
+    .eq-playing .eq-bar:nth-child(3) { animation: eqBounce 1.2s infinite ease-in-out 0.2s; }
+    .eq-playing .eq-bar:nth-child(4) { animation: eqBounce 0.9s infinite ease-in-out 0.4s; }
+
+    @keyframes eqBounce {
+      0%, 100% { height: 4px; }
+      50% { height: 16px; }
     }
   </style>
 </head>
-<body class="bg-sanct-black text-sanct-parchment font-scripture min-h-screen flex flex-col selection:bg-sanct-waxRed selection:text-white">
+<body class="bg-sanct-black text-sanct-parchment font-scripture min-h-screen flex flex-col selection:bg-sanct-waxRed selection:text-white overflow-x-hidden">
+
+  <!-- ============================================================== -->
+  <!-- 0. INTRO LANDING GATE (성전 진입 게이트 화면) -->
+  <!-- ============================================================== -->
+  <div id="intro-gate" class="fixed inset-0 z-50 bg-[#080705] flex items-center justify-center p-4 sm:p-8 transition-all duration-1000 ease-in-out">
+    
+    <!-- Deep Ambient Glow & Radial Background -->
+    <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#1d1711] via-[#0b0907] to-[#040302] opacity-90 pointer-events-none"></div>
+
+    <!-- Sacred Golden Particle Dust Simulation (CSS subtle dots) -->
+    <div class="absolute inset-0 pointer-events-none opacity-20 bg-[radial-gradient(#c59b27_1px,transparent_1px)] [background-size:28px_28px]"></div>
+
+    <!-- Gate Container: 2-Column Responsive Layout (Inspired by Lunox Academy Gate) -->
+    <div class="relative z-10 max-w-6xl w-full grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+      
+      <!-- Left Column: Sacred Title & Entry Call to Action -->
+      <div class="lg:col-span-7 space-y-6 text-left">
+        
+        <!-- Top Sacred Subheader -->
+        <div class="flex items-center space-x-3 text-xs font-latin tracking-[0.25em] text-sanct-gold uppercase">
+          <span class="w-8 h-px bg-sanct-gold/60"></span>
+          <span>ORDO SANCTAE GAIRAE · ARCHIVUM SACRUM</span>
+        </div>
+
+        <!-- Grand Altar Title -->
+        <div class="space-y-1">
+          <h1 class="text-4xl sm:text-5xl lg:text-6xl font-scripture font-extrabold text-sanct-goldLight tracking-tight leading-tight drop-shadow-[0_4px_16px_rgba(0,0,0,0.9)]">
+            가이라스 성좌록
+          </h1>
+          <p class="font-latin text-xl sm:text-2xl text-amber-200/80 tracking-widest uppercase font-semibold">
+            GAIRAS SACRATISSIMA
+          </p>
+        </div>
+
+        <!-- Scripture Quote & Flavor Text -->
+        <p class="text-sm sm:text-base text-sanct-parchmentDark font-scripture leading-relaxed max-w-xl">
+          오직 대지의 어머니 가이라스만이 홀로 서신 창조주이시니, 
+          성궤(Holy Ark)를 참칭하여 인간의 살점을 탐하는 가증스러운 목각 아귀와 
+          비늘 달린 뱀의 후예들을 영구 정죄하노라.
+        </p>
+
+        <!-- Category Tags -->
+        <div class="flex flex-wrap gap-2 pt-1 font-scripture text-xs">
+          <span class="px-3 py-1 rounded bg-[#18130e] border border-sanct-border text-amber-200/80">정통 신화</span>
+          <span class="px-3 py-1 rounded bg-[#18130e] border border-sanct-border text-amber-200/80">대륙력 1200년</span>
+          <span class="px-3 py-1 rounded bg-[#18130e] border border-sanct-border text-amber-200/80">이단 심문록</span>
+          <span class="px-3 py-1 rounded bg-red-950/40 border border-red-900/50 text-rose-300 font-mono">시즌 1 한정판</span>
+        </div>
+
+        <!-- Main Enter CTA Button (Unlocks Audio Context on Click) -->
+        <div class="pt-4 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+          <button id="gate-enter-btn" onclick="enterSacredSanctum()" class="group relative px-8 py-4 rounded bg-gradient-to-r from-[#d4af37] via-[#ecd68a] to-[#c59b27] text-black font-latin font-bold text-sm sm:text-base tracking-wider uppercase transition-all duration-300 hover:shadow-[0_0_30px_rgba(236,214,138,0.6)] hover:scale-[1.02] active:scale-[0.98] flex items-center space-x-3 border border-yellow-200">
+            <span>성전 봉인 해제 및 입도(入道)</span>
+            <i class="fa-solid fa-arrow-right text-xs group-hover:translate-x-1 transition-transform"></i>
+          </button>
+          
+          <span class="text-[11px] text-gray-500 font-scripture flex items-center">
+            <i class="fa-solid fa-volume-high text-sanct-gold mr-1.5"></i>
+            입장 시 성당 찬미가(BGM)가 함께 울려 퍼집니다
+          </span>
+        </div>
+
+      </div>
+
+      <!-- Right Column: Sacred Geometry Emblem & Concentric Astrolabe Circles -->
+      <div class="lg:col-span-5 flex items-center justify-center relative select-none py-6">
+        
+        <!-- Rotating Astrolabe Circles Outer -->
+        <div class="w-64 h-64 sm:w-80 sm:h-80 md:w-96 md:h-96 rounded-full border border-sanct-gold/20 flex items-center justify-center relative animate-spin-slow">
+          <!-- Cross markers on outer ring -->
+          <div class="absolute top-0 w-2 h-2 rounded-full bg-sanct-gold"></div>
+          <div class="absolute bottom-0 w-2 h-2 rounded-full bg-sanct-gold"></div>
+          <div class="absolute left-0 w-2 h-2 rounded-full bg-sanct-gold"></div>
+          <div class="absolute right-0 w-2 h-2 rounded-full bg-sanct-gold"></div>
+        </div>
+
+        <!-- Reverse Ring -->
+        <div class="w-48 h-48 sm:w-64 sm:h-64 md:w-72 md:h-72 rounded-full border border-dashed border-sanct-gold/40 flex items-center justify-center absolute animate-spin-reverse">
+          <div class="absolute -top-1.5 w-3 h-3 rotate-45 border border-sanct-gold bg-black"></div>
+          <div class="absolute -bottom-1.5 w-3 h-3 rotate-45 border border-sanct-gold bg-black"></div>
+        </div>
+
+        <!-- Inner Dark Sanctum Disc -->
+        <div class="w-36 h-36 sm:w-44 sm:h-44 md:w-52 md:h-52 rounded-full bg-gradient-to-br from-[#1d1710] to-[#070504] border-2 border-sanct-gold flex flex-col items-center justify-center absolute shadow-[0_0_40px_rgba(197,155,39,0.35)]">
+          <span class="font-serif text-5xl sm:text-6xl md:text-7xl text-sanct-goldLight halo-gold font-black">G</span>
+          <span class="text-[9px] font-latin tracking-[0.3em] text-sanct-goldDim uppercase mt-1">MATER TERRAE</span>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
 
   <!-- ================= LITURGICAL TOP BANNER ================= -->
   <aside class="bg-[#0b0907] border-b border-sanct-border text-center py-1.5 px-4 text-[11px] font-latin tracking-widest text-sanct-gold uppercase flex items-center justify-center space-x-3">
@@ -118,60 +229,83 @@
     <i class="fa-solid fa-cross text-[10px] text-sanct-gold"></i>
   </aside>
 
-  <!-- ================= CATHEDRAL HEADER ================= -->
+  <!-- ================= CATHEDRAL HEADER (REFINED & SLEEK) ================= -->
   <header class="sticky top-0 z-40 bg-sanct-marble/95 backdrop-blur-md border-b-2 border-sanct-goldDim shadow-2xl">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-20">
       
-      <!-- Seal Emblem & High Title -->
-      <div class="flex items-center space-x-3.5 cursor-pointer" onclick="switchBook('genesis')">
-        <div class="w-12 h-12 rounded-full bg-gradient-to-b from-sanct-altarLight to-black border-2 border-sanct-gold flex items-center justify-center shadow-lg relative">
-          <i class="fa-solid fa-hands-praying text-sanct-goldLight text-xl"></i>
-          <span class="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-sanct-waxRed border border-sanct-gold text-[8px] flex items-center justify-center text-white font-mono font-bold">✝</span>
+      <!-- ================= LEFT: REFINED SLEEK LOGO LOCKUP ================= -->
+      <!-- No more ugly word wrapping! Clean, luxury single-line latin typography -->
+      <div class="flex items-center space-x-3.5 cursor-pointer select-none" onclick="switchBook('genesis')">
+        <!-- Sacred Double-Ring Brass Emblem -->
+        <div class="w-11 h-11 rounded-full bg-gradient-to-b from-[#211b15] to-[#0c0a08] border border-sanct-gold/70 flex items-center justify-center shadow-[0_0_15px_rgba(197,155,39,0.25)] relative shrink-0">
+          <span class="text-sanct-goldLight font-serif text-base font-bold">†</span>
+          <div class="absolute inset-0 rounded-full border border-dashed border-sanct-gold/30"></div>
         </div>
-        <div>
+
+        <!-- Typography Lockup (Horizontal & Clean) -->
+        <div class="flex flex-col whitespace-nowrap">
           <div class="flex items-center space-x-2">
-            <span class="font-latin text-xl font-bold tracking-wider text-sanct-goldLight halo-gold">GAIRAS SACRATISSIMA</span>
-            <span class="px-2 py-0.5 rounded text-[9px] font-mono bg-sanct-waxRed/40 text-rose-300 border border-sanct-waxRed uppercase tracking-wider">이단심문청 공인</span>
+            <span class="font-latin text-base sm:text-lg font-bold tracking-[0.2em] text-sanct-goldLight halo-gold">
+              GAIRAS SACRUM
+            </span>
+            <span class="text-[9px] font-mono tracking-widest px-1.5 py-0.5 rounded bg-black/60 border border-sanct-gold/40 text-amber-300">
+              ANNO 1200
+            </span>
           </div>
-          <span class="text-[11px] text-sanct-parchmentDark tracking-tight block">대지의 어머니 가이라스 성교단 대전령 — 정통 교의록 (대륙력 1200년)</span>
+          <span class="text-[10px] tracking-[0.18em] text-sanct-parchmentDark font-latin uppercase mt-0.5">
+            Terra Aeterna · Archivum Primum
+          </span>
         </div>
       </div>
 
       <!-- Liturgical Nav Tabs -->
-      <nav class="hidden md:flex space-x-1 lg:space-x-2 text-xs font-latin">
-        <button onclick="switchBook('genesis')" id="tab-btn-genesis" class="book-tab-btn px-3.5 py-2 rounded font-semibold transition text-sanct-goldLight bg-sanct-altar border border-sanct-gold/50 shadow">
+      <nav class="hidden lg:flex space-x-1 xl:space-x-2 text-xs font-latin">
+        <button onclick="switchBook('genesis')" id="tab-btn-genesis" class="book-tab-btn px-3 py-2 rounded font-semibold transition text-sanct-goldLight bg-sanct-altar border border-sanct-gold/50 shadow">
           <i class="fa-solid fa-book-bible mr-1.5 text-sanct-gold"></i>제1서 : 성스러운 창세록
         </button>
-        <button onclick="switchBook('chronicles')" id="tab-btn-chronicles" class="book-tab-btn px-3.5 py-2 rounded font-semibold transition text-sanct-parchmentDark hover:text-sanct-goldLight hover:bg-sanct-altar">
+        <button onclick="switchBook('chronicles')" id="tab-btn-chronicles" class="book-tab-btn px-3 py-2 rounded font-semibold transition text-sanct-parchmentDark hover:text-sanct-goldLight hover:bg-sanct-altar">
           <i class="fa-solid fa-scroll mr-1.5"></i>제2서 : 정화와 영광의 성력
         </button>
-        <button onclick="switchBook('bestiary')" id="tab-btn-bestiary" class="book-tab-btn px-3.5 py-2 rounded font-semibold transition text-sanct-parchmentDark hover:text-sanct-goldLight hover:bg-sanct-altar">
+        <button onclick="switchBook('bestiary')" id="tab-btn-bestiary" class="book-tab-btn px-3 py-2 rounded font-semibold transition text-sanct-parchmentDark hover:text-sanct-goldLight hover:bg-sanct-altar">
           <i class="fa-solid fa-skull-crossbones mr-1.5"></i>제3서 : 에르실바 정죄록
         </button>
-        <button onclick="switchBook('inquisition')" id="tab-btn-inquisition" class="book-tab-btn px-3.5 py-2 rounded font-semibold transition text-sanct-parchmentDark hover:text-sanct-goldLight hover:bg-sanct-altar">
+        <button onclick="switchBook('inquisition')" id="tab-btn-inquisition" class="book-tab-btn px-3 py-2 rounded font-semibold transition text-sanct-parchmentDark hover:text-sanct-goldLight hover:bg-sanct-altar">
           <i class="fa-solid fa-fire-burner mr-1.5"></i>제4서 : 성체 의태물 심문록
         </button>
-        <button onclick="switchBook('crusade-map')" id="tab-btn-crusade-map" class="book-tab-btn px-3.5 py-2 rounded font-semibold transition text-sanct-parchmentDark hover:text-sanct-goldLight hover:bg-sanct-altar">
+        <button onclick="switchBook('crusade-map')" id="tab-btn-crusade-map" class="book-tab-btn px-3 py-2 rounded font-semibold transition text-sanct-parchmentDark hover:text-sanct-goldLight hover:bg-sanct-altar">
           <i class="fa-solid fa-map-marked-alt mr-1.5"></i>성도 : 성벌과 십자군 지도
         </button>
       </nav>
 
-      <!-- Right Liturgical Tools -->
-      <div class="flex items-center space-x-2.5">
-        <!-- Cathedral Organ / Chime Toggle -->
-        <button id="organ-btn" onclick="toggleCathedralOrgan()" title="성당 파이프오르간 & 종소리 (Tone.js)" class="px-3 py-2 rounded bg-sanct-altar border border-sanct-border text-sanct-parchment hover:text-sanct-gold hover:border-sanct-gold transition flex items-center space-x-1.5 text-xs">
-          <i id="organ-icon" class="fa-solid fa-church"></i>
-          <span class="hidden sm:inline font-latin text-[11px]">찬미가 연주</span>
+      <!-- Right Utility Bar: BGM Controller & Return to Gate & Anathema -->
+      <div class="flex items-center space-x-2 sm:space-x-3">
+        
+        <!-- BGM Equalizer Toggle Button -->
+        <button id="bgm-toggle-btn" onclick="toggleBGM()" title="성당 찬미가 BGM 켜기/끄기" class="px-2.5 py-1.5 rounded bg-sanct-altar border border-sanct-border text-sanct-parchment hover:text-sanct-gold hover:border-sanct-gold transition flex items-center space-x-2 text-xs">
+          <!-- Animated Equalizer Bars -->
+          <div id="eq-container" class="flex items-end space-x-0.5 h-3.5 w-3.5">
+            <span class="eq-bar w-0.5 bg-sanct-gold h-1"></span>
+            <span class="eq-bar w-0.5 bg-sanct-gold h-2"></span>
+            <span class="eq-bar w-0.5 bg-sanct-gold h-1.5"></span>
+            <span class="eq-bar w-0.5 bg-sanct-gold h-2.5"></span>
+          </div>
+          <span id="bgm-label" class="hidden sm:inline font-latin text-[10px] uppercase tracking-wider text-sanct-gold">BGM ON</span>
+        </button>
+
+        <!-- Return to Intro Gate Button -->
+        <button onclick="returnToGate()" title="성전 정문(게이트)으로 돌아가기" class="hidden md:flex px-2.5 py-1.5 rounded bg-sanct-altar border border-sanct-border text-sanct-parchmentDark hover:text-white transition items-center space-x-1 text-xs">
+          <i class="fa-solid fa-door-open text-[11px]"></i>
+          <span class="font-latin text-[10px]">성문</span>
         </button>
 
         <!-- Anathema Seal Button (Forbidden Archives) -->
-        <button onclick="openAnathemaModal()" title="금서각 (파문 봉인서)" class="px-2.5 py-2 rounded bg-sanct-waxRed/80 border border-red-500/60 text-rose-200 hover:bg-sanct-waxRed transition flex items-center space-x-1.5 text-xs border-wax">
-          <i class="fa-solid fa-stamp text-xs"></i>
+        <button onclick="openAnathemaModal()" title="금서각 (파문 봉인서)" class="px-2.5 py-1.5 rounded bg-sanct-waxRed/85 border border-red-500/60 text-rose-200 hover:bg-sanct-waxBright transition flex items-center space-x-1 text-xs border-wax">
+          <i class="fa-solid fa-stamp text-[11px]"></i>
           <span class="font-latin text-[10px] font-bold">금서각 [파문]</span>
         </button>
 
         <!-- Mobile Menu Trigger -->
-        <button onclick="toggleMobileMenu()" class="md:hidden p-2 rounded bg-sanct-altar border border-sanct-border text-sanct-gold">
+        <button onclick="toggleMobileMenu()" class="lg:hidden p-2 rounded bg-sanct-altar border border-sanct-border text-sanct-gold">
           <i class="fa-solid fa-bars"></i>
         </button>
       </div>
@@ -179,14 +313,22 @@
     </div>
 
     <!-- Mobile Drawer -->
-    <div id="mobile-menu" class="hidden md:hidden border-t border-sanct-border bg-sanct-altar/95 px-4 pt-3 pb-4 space-y-2 text-xs font-scripture">
+    <div id="mobile-menu" class="hidden lg:hidden border-t border-sanct-border bg-sanct-altar/95 px-4 pt-3 pb-4 space-y-2 text-xs font-scripture">
       <button onclick="switchBook('genesis'); toggleMobileMenu();" class="block w-full text-left px-3 py-2 rounded text-sanct-gold"><i class="fa-solid fa-book-bible mr-2"></i>제1서 : 성스러운 창세록</button>
       <button onclick="switchBook('chronicles'); toggleMobileMenu();" class="block w-full text-left px-3 py-2 rounded text-gray-400 hover:text-sanct-gold"><i class="fa-solid fa-scroll mr-2"></i>제2서 : 정화와 영광의 성력</button>
       <button onclick="switchBook('bestiary'); toggleMobileMenu();" class="block w-full text-left px-3 py-2 rounded text-gray-400 hover:text-sanct-gold"><i class="fa-solid fa-skull-crossbones mr-2"></i>제3서 : 에르실바 정죄록</button>
       <button onclick="switchBook('inquisition'); toggleMobileMenu();" class="block w-full text-left px-3 py-2 rounded text-gray-400 hover:text-sanct-gold"><i class="fa-solid fa-fire-burner mr-2"></i>제4서 : 성체 의태물 심문록</button>
       <button onclick="switchBook('crusade-map'); toggleMobileMenu();" class="block w-full text-left px-3 py-2 rounded text-gray-400 hover:text-sanct-gold"><i class="fa-solid fa-map-marked-alt mr-2"></i>성도 : 성벌과 십자군 지도</button>
+      <button onclick="returnToGate(); toggleMobileMenu();" class="block w-full text-left px-3 py-2 rounded text-amber-200 border-t border-sanct-border/60 pt-3"><i class="fa-solid fa-door-open mr-2"></i>성문(인트로)으로 나가기</button>
     </div>
   </header>
+
+  <!-- ================= OPTIONAL CUSTOM AUDIO ELEMENT ================= -->
+  <!-- 
+    팁: 준비하신 mp3 음원 파일 직링크(예: catbox 링크)가 있다면 아래 src="" 안에 넣어주시면
+    내장 신디사이저 대신 해당 음악 파일이 우선 재생됩니다!
+  -->
+  <audio id="custom-bgm-audio" loop preload="none" src=""></audio>
 
   <!-- ================= MAIN SCRIPTURE WRAPPER ================= -->
   <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 relative">
@@ -247,7 +389,7 @@
           </div>
           <h3 class="font-latin text-lg font-bold text-sanct-goldLight mb-3">2. 흙으로 빚어진 3대 축복종</h3>
           <p class="text-xs text-sanct-parchment leading-relaxed drop-cap">
-            어머니께서는 가장 성결한 붉은 진흙을 취하시어 온전한 지성과 신앙을 품은 **인간(Humanity)**을 낳으셨고, 깊은 생명의 수액으로 숲을 지키는 **엘프(Elf)**를 빚으셨으며, 가장 단단한 바위로 **드워프(Dwarf)**를 빚으시어 성스러운 성전을 쌓게 하셨다. 이 삼대 종족만이 어머니의 품에서 정당히 태어난 적자(嫡子)들이니라.
+            어머니께서는 가장 성결한 붉은 진흙을 취하시어 온전한 지성과 신앙을 품은 인간(Humanity)을 낳으셨고, 깊은 생명의 수액으로 숲을 지키는 엘프(Elf)를 빚으셨으며, 가장 단단한 바위로 드워프(Dwarf)를 빚으시어 성스러운 성전을 쌓게 하셨다. 이 삼대 종족만이 어머니의 품에서 정당히 태어난 적자(嫡子)들이니라.
           </p>
         </div>
 
@@ -684,7 +826,7 @@
   <!-- ================= JAVASCRIPT SYSTEM ================= -->
   <script>
     /* -------------------------------------------------------------
-       1. INQUISITORIAL BESTIARY DATA (Season 1 Focused + Locked)
+       1. BESTIARY DATA (Season 1 Focused + Locked)
     ------------------------------------------------------------- */
     const BESTIARY_DATA = [
       {
@@ -799,7 +941,139 @@
     };
 
     /* -------------------------------------------------------------
-       2. TAB SWITCHING SYSTEM
+       2. GATE CONTROLLER (Enter & Return)
+    ------------------------------------------------------------- */
+    function enterSacredSanctum() {
+      const gate = document.getElementById('intro-gate');
+      
+      // Start Tone.js or Custom Audio on user gesture
+      startBGM();
+
+      // Smooth Gate Fadeout
+      gate.style.opacity = '0';
+      gate.style.transform = 'scale(1.05)';
+      gate.style.pointerEvents = 'none';
+
+      setTimeout(() => {
+        gate.classList.add('hidden');
+      }, 1000);
+    }
+
+    function returnToGate() {
+      const gate = document.getElementById('intro-gate');
+      gate.classList.remove('hidden');
+      setTimeout(() => {
+        gate.style.pointerEvents = 'auto';
+        gate.style.opacity = '1';
+        gate.style.transform = 'scale(1)';
+      }, 10);
+    }
+
+    /* -------------------------------------------------------------
+       3. BGM SYSTEM (Custom Audio / Tone.js Hybrid Engine)
+    ------------------------------------------------------------- */
+    let isBgmPlaying = false;
+    let synthOrgan = null;
+    let synthBell = null;
+    let toneLoop = null;
+
+    function startBGM() {
+      const customAudio = document.getElementById('custom-bgm-audio');
+
+      // 1. If custom MP3 URL is provided, play it
+      if (customAudio && customAudio.getAttribute('src') && customAudio.getAttribute('src').trim() !== '') {
+        customAudio.play().then(() => {
+          setBgmState(true);
+        }).catch(() => {
+          startToneSynthesizer();
+        });
+      } else {
+        // 2. Fallback to Web Audio Synthesizer (Dark Cathedral Organ)
+        startToneSynthesizer();
+      }
+    }
+
+    function startToneSynthesizer() {
+      Tone.start().then(() => {
+        if (!synthOrgan) {
+          // Cathedral Pipe Organ Synth
+          synthOrgan = new Tone.PolySynth(Tone.Synth, {
+            oscillator: { type: "sawtooth" },
+            envelope: { attack: 2.5, decay: 4, sustain: 0.9, release: 6 }
+          }).toDestination();
+
+          const filter = new Tone.Filter(320, "lowpass").toDestination();
+          const reverb = new Tone.Reverb({ decay: 9, wet: 0.7 }).toDestination();
+          synthOrgan.connect(filter);
+          filter.connect(reverb);
+          synthOrgan.volume.value = -22;
+
+          // Cathedral Bell Synth
+          synthBell = new Tone.MetalSynth({
+            frequency: 180,
+            envelope: { attack: 0.002, decay: 5, release: 5 },
+            harmonicity: 5.1,
+            modulationIndex: 28,
+            resonance: 4000,
+            octaves: 1.5
+          }).toDestination();
+          synthBell.volume.value = -20;
+        }
+
+        // Trigger Sacred Drone Chords
+        synthOrgan.triggerAttack(["D2", "A2", "F3", "D4"], Tone.now());
+        synthBell.triggerAttackRelease("A3", "2n", Tone.now());
+
+        // Periodic Bell Chime
+        if (!toneLoop) {
+          toneLoop = new Tone.Loop(time => {
+            if (isBgmPlaying && synthBell) {
+              synthBell.triggerAttackRelease("D3", "1n", time);
+            }
+          }, "16m").start(0);
+          Tone.Transport.start();
+        }
+
+        setBgmState(true);
+      });
+    }
+
+    function toggleBGM() {
+      const customAudio = document.getElementById('custom-bgm-audio');
+      
+      if (!isBgmPlaying) {
+        startBGM();
+      } else {
+        if (customAudio && !customAudio.paused) {
+          customAudio.pause();
+        }
+        if (synthOrgan) {
+          synthOrgan.releaseAll();
+        }
+        setBgmState(false);
+      }
+    }
+
+    function setBgmState(playing) {
+      isBgmPlaying = playing;
+      const eq = document.getElementById('eq-container');
+      const label = document.getElementById('bgm-label');
+
+      if (playing) {
+        eq.classList.add('eq-playing');
+        label.textContent = "BGM ON";
+        label.classList.add('text-sanct-gold');
+        label.classList.remove('text-gray-500');
+      } else {
+        eq.classList.remove('eq-playing');
+        label.textContent = "BGM OFF";
+        label.classList.remove('text-sanct-gold');
+        label.classList.add('text-gray-500');
+      }
+    }
+
+    /* -------------------------------------------------------------
+       4. TAB SWITCHING SYSTEM
     ------------------------------------------------------------- */
     function switchBook(tabId) {
       document.querySelectorAll('.book-section').forEach(sec => sec.classList.add('hidden'));
@@ -807,12 +1081,12 @@
       if (targetSec) targetSec.classList.remove('hidden');
 
       document.querySelectorAll('.book-tab-btn').forEach(btn => {
-        btn.className = "book-tab-btn px-3.5 py-2 rounded font-semibold transition text-sanct-parchmentDark hover:text-sanct-goldLight hover:bg-sanct-altar";
+        btn.className = "book-tab-btn px-3 py-2 rounded font-semibold transition text-sanct-parchmentDark hover:text-sanct-goldLight hover:bg-sanct-altar";
       });
 
       const activeBtn = document.getElementById(`tab-btn-${tabId}`);
       if (activeBtn) {
-        activeBtn.className = "book-tab-btn px-3.5 py-2 rounded font-semibold transition text-sanct-goldLight bg-sanct-altar border border-sanct-gold/50 shadow";
+        activeBtn.className = "book-tab-btn px-3 py-2 rounded font-semibold transition text-sanct-goldLight bg-sanct-altar border border-sanct-gold/50 shadow";
       }
 
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -823,7 +1097,7 @@
     }
 
     /* -------------------------------------------------------------
-       3. ANATHEMA FORBIDDEN ARCHIVE MODAL
+       5. ANATHEMA MODAL (Forbidden Archives)
     ------------------------------------------------------------- */
     function openAnathemaModal() {
       document.getElementById('anathema-modal').classList.remove('hidden');
@@ -834,7 +1108,7 @@
     }
 
     /* -------------------------------------------------------------
-       4. BESTIARY RENDERING
+       6. BESTIARY SYSTEM
     ------------------------------------------------------------- */
     function renderBestiary(filter = 'all') {
       const grid = document.getElementById('bestiary-grid');
@@ -925,7 +1199,7 @@
     }
 
     /* -------------------------------------------------------------
-       5. INQUISITION EXPERIMENT SIMULATOR
+       7. INQUISITION SYNTHESIS SIMULATOR
     ------------------------------------------------------------- */
     const INQ_FUSIONS = {
       "wood+iron": {
@@ -982,7 +1256,7 @@
     }
 
     /* -------------------------------------------------------------
-       6. SACRED MAP INTERACTION
+       8. SACRED MAP INTERACTION
     ------------------------------------------------------------- */
     let mapZoom = 1;
 
@@ -1021,60 +1295,7 @@
     }
 
     /* -------------------------------------------------------------
-       7. TONE.JS CATHEDRAL ORGAN & BELL
-    ------------------------------------------------------------- */
-    let isOrganPlaying = false;
-    let organSynth = null;
-    let cathedralBell = null;
-
-    function toggleCathedralOrgan() {
-      const icon = document.getElementById('organ-icon');
-
-      if (!isOrganPlaying) {
-        Tone.start().then(() => {
-          if (!organSynth) {
-            // Low Gregorian Pipe Organ PolySynth
-            organSynth = new Tone.PolySynth(Tone.Synth, {
-              oscillator: { type: "sawtooth" },
-              envelope: { attack: 2.5, decay: 3, sustain: 0.85, release: 5 }
-            }).toDestination();
-
-            const organFilter = new Tone.Filter(280, "lowpass").toDestination();
-            const cathedralReverb = new Tone.Reverb({ decay: 8, wet: 0.65 }).toDestination();
-            organSynth.connect(organFilter);
-            organFilter.connect(cathedralReverb);
-            organSynth.volume.value = -20;
-
-            // Church Bell
-            cathedralBell = new Tone.MetalSynth({
-              frequency: 200,
-              envelope: { attack: 0.001, decay: 4, release: 4 },
-              harmonicity: 5.1,
-              modulationIndex: 32,
-              resonance: 4000,
-              octaves: 1.5
-            }).toDestination();
-            cathedralBell.volume.value = -18;
-          }
-
-          // Solemn Church Chords (D minor liturgical drone)
-          organSynth.triggerAttack(["D2", "A2", "F3", "D4"], Tone.now());
-          cathedralBell.triggerAttackRelease("A3", "2n", Tone.now());
-
-          isOrganPlaying = true;
-          icon.className = "fa-solid fa-volume-high text-sanct-gold animate-pulse";
-          alertHolyToast("성당 파이프오르간과 종소리가 울려 퍼집니다. (Sola Gairas)");
-        });
-      } else {
-        if (organSynth) organSynth.releaseAll();
-        isOrganPlaying = false;
-        icon.className = "fa-solid fa-church";
-        alertHolyToast("성가가 멈추었습니다.");
-      }
-    }
-
-    /* -------------------------------------------------------------
-       8. HOLY TOAST NOTIFICATION
+       9. HOLY TOAST NOTIFICATION
     ------------------------------------------------------------- */
     function alertHolyToast(msg) {
       let toast = document.getElementById('holy-toast');
@@ -1094,7 +1315,7 @@
       }, 3000);
     }
 
-    // Keyboard ESC
+    // Keyboard ESC Listener
     window.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
         closeCodexModal();
